@@ -24,6 +24,11 @@
 
 @end
 
+@interface Media(ResourceLoader)<AVAssetResourceLoaderDelegate>
+
+@end
+
+
 @implementation MediaLibraryPickerDataSource
 
 - (void)dealloc
@@ -622,6 +627,7 @@
 
     // Let see if can create an asset with this url
     AVURLAsset *asset = [AVURLAsset assetWithURL:url];
+    [asset.resourceLoader setDelegate:self queue:dispatch_get_main_queue()];
     if (!asset) {
         NSString *errorMessage = NSLocalizedString(@"Selected media is unavailable.", @"Error message when user tries a no longer existent video media object.");
         completionHandler(nil, [self errorWithMessage:errorMessage]);
@@ -693,4 +699,18 @@
     return [[self.objectID URIRepresentation] absoluteString];
 }
 
+@end
+
+@implementation Media(ResourceLoader)
+
+    -(BOOL)resourceLoader:(AVAssetResourceLoader *)resourceLoader shouldWaitForLoadingOfRequestedResource:(AVAssetResourceLoadingRequest *)loadingRequest {
+        NSURLRequest *redirectRequest = [PrivateSiteURLProtocol requestForPrivateSiteFromURL:loadingRequest.request.URL];
+        loadingRequest.redirect = redirectRequest;
+        [loadingRequest finishLoading];        
+        return YES;
+    }
+
+    -(BOOL)resourceLoader:(AVAssetResourceLoader *)resourceLoader shouldWaitForResponseToAuthenticationChallenge:(NSURLAuthenticationChallenge *)authenticationChallenge {
+        return NO;
+    }
 @end
