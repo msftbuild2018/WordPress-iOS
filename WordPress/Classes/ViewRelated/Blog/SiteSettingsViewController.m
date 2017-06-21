@@ -61,6 +61,8 @@ static NSString *const EmptySiteSupportURL = @"https://en.support.wordpress.com/
 
 @interface SiteSettingsViewController () <UITableViewDelegate, UITextFieldDelegate, PostCategoriesViewControllerDelegate>
 
+#pragma mark - Site Icon
+@property (nonatomic, strong) BlogSettingsHeaderView *siteIconHeader;
 #pragma mark - General Section
 @property (nonatomic, strong) SettingTableViewCell *siteTitleCell;
 @property (nonatomic, strong) SettingTableViewCell *siteTaglineCell;
@@ -122,6 +124,13 @@ static NSString *const EmptySiteSupportURL = @"https://en.support.wordpress.com/
 
     [WPStyleGuide configureColorsForView:self.view andTableView:self.tableView];
     
+    _siteIconHeader = [[BlogSettingsHeaderView alloc] initWithFrame:CGRectMake(0, 0, 320, 200)];
+    UITapGestureRecognizer *singleFingerTap =
+    [[UITapGestureRecognizer alloc] initWithTarget:self
+                                            action:@selector(handleSingleTap:)];
+    [self.siteIconHeader addGestureRecognizer:singleFingerTap];
+    self.tableView.tableHeaderView = self.siteIconHeader;
+    
     self.refreshControl = [[UIRefreshControl alloc] init];
     [self.refreshControl addTarget:self action:@selector(refreshTriggered:) forControlEvents:UIControlEventValueChanged];
 
@@ -130,6 +139,10 @@ static NSString *const EmptySiteSupportURL = @"https://en.support.wordpress.com/
     }
 
     [self refreshData];
+}
+
+- (void)handleSingleTap:(UITapGestureRecognizer *)recognizer
+{
 }
 
 - (void)viewDidAppear:(BOOL)animated
