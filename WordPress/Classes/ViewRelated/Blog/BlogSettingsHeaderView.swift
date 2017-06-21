@@ -26,11 +26,11 @@ protocol BlogSettingsHeaderCallback {
     var siteIconUrl: String {
         set {
             if (newValue != siteIconUrl) {
-                siteIconUrl = newValue
+                self.siteIconUrl = newValue
             }
         }
         get {
-            return siteIconUrl
+            return self.siteIconUrl
         }
     }
     
@@ -96,6 +96,7 @@ protocol BlogSettingsHeaderCallback {
                                          multiplier: 1,
                                          constant: 0))
     }
+    
     private func updateSiteIcon(blog: Blog) {
     }
 }
