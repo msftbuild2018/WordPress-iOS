@@ -1,7 +1,7 @@
 import Foundation
 import WordPressShared
 
-class BlogSettingsHeaderView: UIView {
+@objc class BlogSettingsHeaderView: UIView {
     let NO_ICON_STATUS_TEXT = "Add a Site Icon"
     let UPDATE_ICON_STATUS_TEXT = "Update Site Icon"
     
