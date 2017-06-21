@@ -16,7 +16,7 @@ protocol BlogSettingsHeaderCallback {
     let BlogSettingsHeaderMinimumPressDuration = 0.001;
     
     // callback
-    optional var callback: BlogSettingsHeaderCallback
+    var callback: BlogSettingsHeaderCallback?
     
     // views
     var siteIconImageView: UIImageView = UIImageView()
