@@ -35,7 +35,15 @@ import WordPressShared
     
     private func newLabelForStatusText() -> UILabel {
         let label = UILabel(frame: CGRect.zero)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.numberOfLines = 1
+        label.backgroundColor = UIColor.clear
+        label.isOpaque = true
+        label.textColor = WPStyleGuide.wordPressBlue()
+        label.adjustsFontSizeToFitWidth = false
+        label.textAlignment = NSTextAlignment.center
         label.text = NO_ICON_STATUS_TEXT
+        WPStyleGuide.configureLabel(label, textStyle:UIFontTextStyle.callout)
         return label
     }
     
