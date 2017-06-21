@@ -1,6 +1,10 @@
 import Foundation
 import WordPressShared
 
+protocol BlogSettingsHeaderCallback {
+    func onSiteIconEditRequested()
+}
+
 @objc class BlogSettingsHeaderView: UIView {
     let NO_ICON_STATUS_TEXT = "Add a Site Icon"
     let UPDATE_ICON_STATUS_TEXT = "Update Site Icon"
@@ -11,6 +15,8 @@ import WordPressShared
     let BlogSettingsHeaderVerticalSpacing = 10.0;
     let BlogSettingsHeaderMinimumPressDuration = 0.001;
     
+    // callback
+    optional var callback: BlogSettingsHeaderCallback
     
     // views
     var siteIconImageView: UIImageView = UIImageView()
