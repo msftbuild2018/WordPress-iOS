@@ -104,6 +104,16 @@ protocol BlogSettingsHeaderCallback {
     }
     
     private func configureConstraints() {
+        // center the site icon horizontally
+        addConstraint(NSLayoutConstraint(item: siteIconImageView,
+                                         attribute: NSLayoutAttribute.centerX,
+                                         relatedBy: NSLayoutRelation.equal,
+                                         toItem: self,
+                                         attribute: NSLayoutAttribute.centerX,
+                                         multiplier: 1,
+                                         constant: 0))
+        
+        // center the status text horizontally
         addConstraint(NSLayoutConstraint(item: statusTextLabel,
                                          attribute: NSLayoutAttribute.centerX,
                                          relatedBy: NSLayoutRelation.equal,
