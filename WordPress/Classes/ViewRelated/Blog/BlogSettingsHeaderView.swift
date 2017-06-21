@@ -56,6 +56,22 @@ protocol BlogSettingsHeaderCallback {
     }
     
     func handleIconLongPress(gestureReconizer: UILongPressGestureRecognizer) {
+        // Touch Down: Depress the site icon
+        if (gestureReconizer.state == UIGestureRecognizerState.began) {
+            siteIconImageView.depressSpringAnimation()
+            return
+        }
+        
+        // Touch Up: Normalize the site icon
+        if (gestureReconizer.state == UIGestureRecognizerState.ended) {
+            siteIconImageView.normalizeSpringAnimation()
+            
+            // make sure touch was in site icon boundary
+            let touchInSiteIcon = gestureReconizer.location(in: siteIconImageView)
+            if (callback != nil && siteIconImageView.bounds.contains(touchInSiteIcon)) {
+                callback.onSiteIconEditRequested()
+            }
+        }
     }
     
     private func newImageViewForSiteIcon() -> UIImageView {
