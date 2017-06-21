@@ -4,7 +4,16 @@ import WordPressShared
 @objc class BlogSettingsHeaderView: UIView {
     let NO_ICON_STATUS_TEXT = "Add a Site Icon"
     let UPDATE_ICON_STATUS_TEXT = "Update Site Icon"
+    let BlogSettingsHeaderHeight = 154;
+    let BlogSettingsHeaderIconSize = 64.0;
+    let BlogSettingsHeaderLabelHeight = 20.0;
+    let BlogSettingsHeaderVerticalMargin = 20.0;
+    let BlogSettingsHeaderVerticalSpacing = 10.0;
+    let BlogSettingsHeaderMinimumPressDuration = 0.001;
     
+    
+    // views
+    var siteIconImageView: UIImageView = UIImageView()
     var statusTextLabel: UILabel = UILabel()
     
     // changing the site icon will automatically update the icon image view
@@ -23,14 +32,39 @@ import WordPressShared
         super.init(frame: frame)
         
         // Setup the site icon image view and add it to layout
-//        siteIconImageView = UIImageView(frame: CGRect(0, 0, MeHeaderViewGravatarSize, MeHeaderViewGravatarSize))
-//        addSubview(siteIconImageView)
+        addSubview(siteIconImageView)
         
         // Setup the site icon status text view and add it to layout
         statusTextLabel = newLabelForStatusText()
         addSubview(statusTextLabel)
         
         configureConstraints()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+    }
+    
+    func handleIconLongPress(gestureReconizer: UILongPressGestureRecognizer) {
+    }
+    
+    private func newImageViewForSiteIcon() -> UIImageView {
+        let frame = CGRect(x: 0.0, y: 0.0, width: BlogSettingsHeaderIconSize, height: BlogSettingsHeaderIconSize)
+        let imageView = UIImageView(frame: frame)
+        imageView.clipsToBounds = true
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.isUserInteractionEnabled = true
+        
+        // allow site icon view to handle long presses
+        let gestureRecognizer = UILongPressGestureRecognizer(target: self, action: Selector(("handleIconLongPress:")))
+        gestureRecognizer.minimumPressDuration = BlogSettingsHeaderMinimumPressDuration
+        imageView.addGestureRecognizer(gestureRecognizer)
+        
+        return imageView
     }
     
     private func newLabelForStatusText() -> UILabel {
@@ -45,14 +79,6 @@ import WordPressShared
         label.text = NO_ICON_STATUS_TEXT
         WPStyleGuide.configureLabel(label, textStyle:UIFontTextStyle.callout)
         return label
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
     }
     
     private func configureConstraints() {
