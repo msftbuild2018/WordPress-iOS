@@ -68,8 +68,8 @@ protocol BlogSettingsHeaderCallback {
             
             // make sure touch was in site icon boundary
             let touchInSiteIcon = gestureReconizer.location(in: siteIconImageView)
-            if (callback != nil && siteIconImageView.bounds.contains(touchInSiteIcon)) {
-                callback.onSiteIconEditRequested()
+            if (siteIconImageView.bounds.contains(touchInSiteIcon)) {
+                callback?.onSiteIconEditRequested()
             }
         }
     }
