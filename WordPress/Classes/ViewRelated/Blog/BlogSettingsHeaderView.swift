@@ -6,8 +6,8 @@ protocol BlogSettingsHeaderCallback {
 }
 
 @objc class BlogSettingsHeaderView: UIView {
-    let NO_ICON_STATUS_TEXT = "Add a Site Icon"
-    let UPDATE_ICON_STATUS_TEXT = "Update Site Icon"
+    let noIconStatusText = "Add a Site Icon"
+    let updateIconStatusText = "Update Site Icon"
     let BlogSettingsHeaderHeight = 154;
     let BlogSettingsHeaderIconSize = 64.0;
     let BlogSettingsHeaderLabelHeight = 20.0;
@@ -74,7 +74,7 @@ protocol BlogSettingsHeaderCallback {
         }
     }
     
-    private func newImageViewForSiteIcon() -> UIImageView {
+    fileprivate func newImageViewForSiteIcon() -> UIImageView {
         let frame = CGRect(x: 0.0, y: 0.0, width: BlogSettingsHeaderIconSize, height: BlogSettingsHeaderIconSize)
         let imageView = UIImageView(frame: frame)
         imageView.clipsToBounds = true
@@ -89,7 +89,7 @@ protocol BlogSettingsHeaderCallback {
         return imageView
     }
     
-    private func newLabelForStatusText() -> UILabel {
+    fileprivate func newLabelForStatusText() -> UILabel {
         let label = UILabel(frame: CGRect.zero)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 1
@@ -98,12 +98,12 @@ protocol BlogSettingsHeaderCallback {
         label.textColor = WPStyleGuide.wordPressBlue()
         label.adjustsFontSizeToFitWidth = false
         label.textAlignment = NSTextAlignment.center
-        label.text = NO_ICON_STATUS_TEXT
+        label.text = noIconStatusText
         WPStyleGuide.configureLabel(label, textStyle:UIFontTextStyle.callout)
         return label
     }
     
-    private func configureConstraints() {
+    fileprivate func configureConstraints() {
         // center the site icon horizontally
         addConstraint(NSLayoutConstraint(item: siteIconImageView,
                                          attribute: NSLayoutAttribute.centerX,
@@ -123,6 +123,6 @@ protocol BlogSettingsHeaderCallback {
                                          constant: 0))
     }
     
-    private func updateSiteIcon(blog: Blog) {
+    fileprivate func updateSiteIcon(blog: Blog) {
     }
 }
