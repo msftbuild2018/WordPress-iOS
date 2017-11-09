@@ -55,6 +55,14 @@ class MediaLibraryViewController: UIViewController {
 
     var searchQuery: String? = nil
 
+    private var uploadCoordinatorUUID: UUID? = nil
+
+    // Only used during testing phase of upload coordinator development.
+    // Remove when upload coordinator is properly integrated into the media library.
+    // @frosty 2017-11-01
+    //
+    fileprivate var useUploadCoordinator = false
+
     // MARK: - Initializers
 
     init(blog: Blog) {
@@ -80,6 +88,7 @@ class MediaLibraryViewController: UIViewController {
 
     deinit {
         unregisterChangeObserver()
+        unregisterUploadCoordinatorObserver()
     }
 
     private func configurePickerViewController() {
@@ -95,6 +104,8 @@ class MediaLibraryViewController: UIViewController {
 
     // MARK: - View Loading
 
+    var uploadObserverUUID: UUID?
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -108,6 +119,7 @@ class MediaLibraryViewController: UIViewController {
         addNoResultsView()
 
         registerChangeObserver()
+        registerUploadCoordinatorObserver()
 
         updateViewState(for: pickerDataSource.totalAssetCount)
     }
@@ -383,7 +395,7 @@ class MediaLibraryViewController: UIViewController {
     }
 
     private var hasSearchQuery: Bool {
-        return (pickerDataSource.searchQuery ?? "").characters.count > 0
+        return (pickerDataSource.searchQuery ?? "").count > 0
     }
 
     // MARK: - Actions
@@ -430,6 +442,13 @@ class MediaLibraryViewController: UIViewController {
 
         menuAlert.addDefaultActionWithTitle(NSLocalizedString("Other Apps", comment: "Menu option used for adding media from other applications.")) { _ in
             self.showDocumentPicker()
+        }
+
+        if FeatureFlag.asyncUploadsInMediaLibrary.enabled {
+            menuAlert.addDefaultActionWithTitle("Photo Library (Async - Debug)") { _ in
+                self.useUploadCoordinator = true
+                self.showMediaPicker()
+            }
         }
 
         menuAlert.addCancelActionWithTitle(NSLocalizedString("Cancel", comment: "Cancel button"))
@@ -536,6 +555,24 @@ class MediaLibraryViewController: UIViewController {
     private func unregisterChangeObserver() {
         if let mediaLibraryChangeObserverKey = mediaLibraryChangeObserverKey {
             pickerDataSource.unregisterChangeObserver(mediaLibraryChangeObserverKey)
+        }
+    }
+
+    // MARK: - Upload Coordinator Observer
+
+    private func registerUploadCoordinatorObserver() {
+        guard FeatureFlag.asyncUploadsInMediaLibrary.enabled else {
+            return
+        }
+
+        uploadObserverUUID = MediaUploadCoordinator.shared.addObserver({ (media, state) in
+            print("Media \(String(describing: media.filename)) in state \(String(describing: state))")
+        }, for: nil)
+    }
+
+    private func unregisterUploadCoordinatorObserver() {
+        if let uuid = uploadObserverUUID {
+            MediaUploadCoordinator.shared.removeObserver(withUUID: uuid)
         }
     }
 
@@ -715,6 +752,16 @@ extension MediaLibraryViewController: WPMediaPickerViewControllerDelegate {
         guard let assets = assets as? [PHAsset],
             assets.count > 0 else { return }
 
+        if FeatureFlag.asyncUploadsInMediaLibrary.enabled && useUploadCoordinator {
+            useUploadCoordinator = false
+
+            for asset in assets {
+                MediaUploadCoordinator.shared.addMedia(from: asset, to: blog)
+            }
+
+            return
+        }
+
         prepareMediaProgressForNumberOfAssets(assets.count)
 
         for asset in assets {
@@ -723,6 +770,8 @@ extension MediaLibraryViewController: WPMediaPickerViewControllerDelegate {
     }
 
     func mediaPickerControllerDidCancel(_ picker: WPMediaPickerViewController) {
+        useUploadCoordinator = false
+
         dismiss(animated: true, completion: nil)
     }
 
