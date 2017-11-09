@@ -135,7 +135,135 @@ print <<-EOF
 EOF
 end
 
-def print_class(client, secret, pocket, crashlytics, hockeyapp, googleplus, google_id, google_id_alpha, google_id_internal, google_login_server, helpshift_api_key, helpshift_domain_name, helpshift_app_id, debugging_key)
+def print_debugging_key(debugging_key)
+print <<-EOF
++ (NSString *)debuggingKey {
+    return @"#{debugging_key}";
+}
+EOF
+end
+
+def print_debugging_key(debugging_key)
+print <<-EOF
++ (NSString *)debuggingKey {
+    return @"#{debugging_key}";
+}
+EOF
+end
+
+def print_debugging_key(debugging_key)
+print <<-EOF
++ (NSString *)debuggingKey {
+    return @"#{debugging_key}";
+}
+EOF
+end
+
+def print_debugging_key(debugging_key)
+print <<-EOF
++ (NSString *)debuggingKey {
+    return @"#{debugging_key}";
+}
+EOF
+end
+
+def print_debugging_key(debugging_key)
+print <<-EOF
++ (NSString *)debuggingKey {
+    return @"#{debugging_key}";
+}
+EOF
+end
+
+def print_debugging_key(debugging_key)
+print <<-EOF
++ (NSString *)debuggingKey {
+    return @"#{debugging_key}";
+}
+EOF
+end
+
+def print_debugging_key(debugging_key)
+print <<-EOF
++ (NSString *)debuggingKey {
+    return @"#{debugging_key}";
+}/Users/will/.wpcom_app_credentials
+EOF
+end
+
+def print_test_one_step_email(test_one_step_email)
+print <<-EOF
++ (NSString *)testOneStepEmail {
+    return @"#{test_one_/Users/will/.wpcom_app_credentialsstep_email}";
+}
+EOF
+end
+
+def print_test_one_step_password(test_one_step_password)
+print <<-EOF
++ (NSString *)testOneStepPassword {
+    return @"#{test_one_step_password}";
+}
+EOF
+end
+
+def print_test_two_step_email(test_two_step_email)
+print <<-EOF
++ (NSString *)testTwoStepEmail {
+    return @"#{test_two_step_email}";
+}
+EOF
+end
+
+def print_test_two_step_password(test_two_step_password)
+print <<-EOF
++ (NSString *)testTwoStepPassword {
+    return @"#{test_two_step_password}";
+}
+EOF
+end
+
+def print_test_self_hosted_email(test_self_hosted_email)
+print <<-EOF
++ (NSString *)testSelfHostedEmail {
+    return @"#{test_self_hosted_email}";
+}
+EOF
+end
+
+def print_test_self_hosted_password(test_self_hosted_password)
+print <<-EOF
++ (NSString *)testSelfHostedEmail {
+    return @"#{test_self_hosted_password}";
+}
+EOF
+end
+
+def print_test_self_hosted_site_url(test_self_hosted_site_url)
+print <<-EOF
++ (NSString *)testSelfHostedSiteUrl {
+    return @"#{test_self_hosted_site_url}";
+}
+EOF
+end
+
+def print_test_nux_email_suffix(test_nux_email_suffix)
+print <<-EOF
++ (NSString *)testNuxEmailSuffix {
+    return @"#{test_nux_email_suffix}";
+}
+EOF
+end
+
+def print_test_nux_email_prefix(test_nux_email_prefix)
+print <<-EOF
++ (NSString *)testNuxEmailPrefix {
+    return @"#{test_nux_email_prefix}";
+}
+EOF
+end
+
+def print_class(client, secret, pocket, crashlytics, hockeyapp, googleplus, google_id, google_id_alpha, google_id_internal, google_login_server, helpshift_api_key, helpshift_domain_name, helpshift_app_id, debugging_key, test_one_step_email, test_one_step_password, test_two_step_email, test_two_step_password, test_self_hosted_email, test_self_hosted_password, test_self_hosted_site_url, test_nux_email_suffix, test_nux_email_prefix)
   print <<-EOF
 #import "ApiCredentials.h"
 @implementation ApiCredentials
@@ -253,7 +381,7 @@ if !configuration.nil? && ["Release", "Release-Internal"].include?(configuration
   if configuration == "Release-Internal"
     if hockeyapp.nil?
       $stderr.puts "warning: HockeyApp App Id not found"
-    end 
+    end
   end
 end
 
