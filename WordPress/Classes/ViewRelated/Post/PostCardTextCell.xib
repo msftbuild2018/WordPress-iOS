@@ -254,7 +254,6 @@
                 <outlet property="headerViewLeftConstraint" destination="2pB-iJ-nFa" id="1Ha-rq-koT"/>
                 <outlet property="metaButtonLeft" destination="uDE-AO-Rii" id="NHd-hW-Cag"/>
                 <outlet property="metaButtonRight" destination="Ovg-ci-Pfb" id="dCB-Tf-ED7"/>
-                <outlet property="metaView" destination="YwV-AJ-Nvl" id="KYr-Rj-rfE"/>
                 <outlet property="postContentView" destination="Lk7-nZ-b0t" id="Neo-yT-N8p"/>
                 <outlet property="snippetLabel" destination="POV-pe-wu8" id="fTi-7j-wzx"/>
                 <outlet property="statusImageView" destination="8Cs-fq-wSe" id="8o2-uv-ADi"/>
