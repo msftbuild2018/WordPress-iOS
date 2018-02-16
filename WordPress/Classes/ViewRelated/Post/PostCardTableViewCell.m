@@ -30,6 +30,7 @@ typedef NS_ENUM(NSUInteger, ActionBarMode) {
 @property (nonatomic, strong) IBOutlet UILabel *authorNameLabel;
 @property (nonatomic, strong) IBOutlet UIImageView *postCardImageView;
 @property (nonatomic, strong) IBOutlet CachedAnimatedImageView *postCardAnimatedImageView;
+@property (nonatomic, strong) IBOutlet UIStackView *titleAndSnippetStackView;
 @property (nonatomic, strong) IBOutlet UILabel *titleLabel;
 @property (nonatomic, strong) IBOutlet UILabel *snippetLabel;
 @property (nonatomic, strong) IBOutlet UIView *dateView;
@@ -38,31 +39,18 @@ typedef NS_ENUM(NSUInteger, ActionBarMode) {
 @property (nonatomic, strong) IBOutlet UIView *statusView;
 @property (nonatomic, strong) IBOutlet UIImageView *statusImageView;
 @property (nonatomic, strong) IBOutlet UILabel *statusLabel;
-@property (nonatomic, strong) IBOutlet UIView *metaView;
 @property (nonatomic, strong) IBOutlet UIButton *metaButtonRight;
 @property (nonatomic, strong) IBOutlet UIButton *metaButtonLeft;
 @property (nonatomic, strong) IBOutlet PostCardActionBar *actionBar;
 @property (nonatomic, strong) IBOutlet NSLayoutConstraint *headerViewLeftConstraint;
 @property (nonatomic, strong) IBOutlet NSLayoutConstraint *headerViewHeightConstraint;
 @property (nonatomic, strong) IBOutlet NSLayoutConstraint *headerViewLowerConstraint;
-@property (nonatomic, strong) IBOutlet NSLayoutConstraint *titleLowerConstraint;
-@property (nonatomic, strong) IBOutlet NSLayoutConstraint *snippetLowerConstraint;
-@property (nonatomic, strong) IBOutlet NSLayoutConstraint *dateViewLowerConstraint;
-@property (nonatomic, strong) IBOutlet NSLayoutConstraint *statusHeightConstraint;
-@property (nonatomic, strong) IBOutlet NSLayoutConstraint *statusViewLowerConstraint;
-@property (nonatomic, strong) IBOutlet NSLayoutConstraint *postContentBottomConstraint;
-@property (nonatomic, strong) IBOutlet NSLayoutConstraint *postCardImageViewBottomConstraint;
 @property (nonatomic, strong) IBOutlet NSLayoutConstraint *postCardImageViewHeightConstraint;
 
 @property (nonatomic, weak) id<InteractivePostViewDelegate> delegate;
 @property (nonatomic, strong) Post *post;
 @property (nonatomic) CGFloat headerViewHeight;
 @property (nonatomic) CGFloat headerViewLowerMargin;
-@property (nonatomic) CGFloat titleViewLowerMargin;
-@property (nonatomic) CGFloat snippetViewLowerMargin;
-@property (nonatomic) CGFloat dateViewLowerMargin;
-@property (nonatomic) CGFloat statusViewHeight;
-@property (nonatomic) CGFloat statusViewLowerMargin;
 @property (nonatomic) BOOL didPreserveStartingConstraintConstants;
 @property (nonatomic) ActionBarMode currentActionBarMode;
 
@@ -167,11 +155,6 @@ typedef NS_ENUM(NSUInteger, ActionBarMode) {
 {
     self.headerViewHeight = self.headerViewHeightConstraint.constant;
     self.headerViewLowerMargin = self.headerViewLowerConstraint.constant;
-    self.titleViewLowerMargin = self.titleLowerConstraint.constant;
-    self.snippetViewLowerMargin = self.snippetLowerConstraint.constant;
-    self.dateViewLowerMargin = self.dateViewLowerConstraint.constant;
-    self.statusViewHeight = self.statusHeightConstraint.constant;
-    self.statusViewLowerMargin = self.statusViewLowerConstraint.constant;
 
     self.didPreserveStartingConstraintConstants = YES;
 }
@@ -297,9 +280,12 @@ typedef NS_ENUM(NSUInteger, ActionBarMode) {
 {
     AbstractPost *post = [self.post latest];
     NSString *str = [post titleForDisplay] ?: [NSString string];
-    self.titleLabel.attributedText = [[NSAttributedString alloc] initWithString:str.stringByStrippingHTML attributes:[WPStyleGuide postCardTitleAttributes]];
-    self.titleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
-    self.titleLowerConstraint.constant = ([str length] > 0) ? self.titleViewLowerMargin : 0.0;
+    if (![str isEmpty]) {
+        self.titleLabel.attributedText = [[NSAttributedString alloc] initWithString:str.stringByStrippingHTML attributes:[WPStyleGuide postCardTitleAttributes]];
+        self.titleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
+    }
+
+    self.titleLabel.hidden = [str isEmpty];
 }
 
 - (void)configureSnippet
@@ -308,7 +294,10 @@ typedef NS_ENUM(NSUInteger, ActionBarMode) {
     NSString *str = [post contentPreviewForDisplay] ?: [NSString string];
     self.snippetLabel.attributedText = [[NSAttributedString alloc] initWithString:str.stringByStrippingHTML attributes:[WPStyleGuide postCardSnippetAttributes]];
     self.snippetLabel.lineBreakMode = NSLineBreakByTruncatingTail;
-    self.snippetLowerConstraint.constant = ([str length] > 0) ? self.snippetViewLowerMargin : 0.0;
+
+    self.snippetLabel.hidden = [str isEmpty];
+
+    self.titleAndSnippetStackView.hidden = (self.snippetLabel.isHidden && self.titleLabel.isHidden);
 }
 
 - (void)configureDate
@@ -321,15 +310,8 @@ typedef NS_ENUM(NSUInteger, ActionBarMode) {
 {
     NSString *str = [self.post statusForDisplay];
     self.statusView.hidden = ([str length] == 0);
-    if (self.statusView.hidden) {
-        self.dateViewLowerConstraint.constant = 0.0;
-        self.statusHeightConstraint.constant = 0.0;
-    } else {
-        self.dateViewLowerConstraint.constant = self.dateViewLowerMargin;
-        self.statusHeightConstraint.constant = self.statusViewHeight;
-    }
-
     self.statusLabel.text = str;
+
     // Set the correct icon and text color
     if ([[self.post status] isEqualToString:PostStatusPending]) {
         self.statusImageView.image = [UIImage imageNamed:@"icon-post-status-pending"];
