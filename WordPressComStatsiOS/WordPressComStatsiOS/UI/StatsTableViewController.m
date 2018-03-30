@@ -87,6 +87,8 @@ static NSString *const StatsTableSectionHeaderSimpleBorder = @"StatsTableSection
     
     NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
     [nc addObserver:self selector:@selector(applicationDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
+
+    [self.tableView reloadData];
 }
 
 - (void)viewDidAppear:(BOOL)animated
